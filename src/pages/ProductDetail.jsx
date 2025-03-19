@@ -1,32 +1,68 @@
 import { useParams } from "react-router-dom";
 import Button from "../components/ui/Button";
+import { useState } from "react";
+import { useEffect } from "react";
+import OptimizedImage from "../components/utils/OptimizedImage";
 
 function ProductDetail() {
   const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Demo product details - in a real application, data would be fetched based on the id
-  const product = {
-    id: id,
-    title: "Sample Product",
-    price: 199.99,
-    image: "https://placehold.co/400",
-    description:
-      "Detailed description about this amazing product. Made with high-quality materials, this product is durable and long-lasting. Available in different color options.",
-    features: [
-      "High-quality fabric",
-      "Durable stitching",
-      "Easy to wash",
-      "Modern design",
-    ],
-  };
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`https://dummyjson.com/products/${id}`);
+
+        if (!response.ok) {
+          throw new Error("Product not found");
+        }
+
+        const data = await response.json();
+        setProduct(data);
+        console.log(data);
+      } catch (err) {
+        setError(err.message);
+        console.error("Error fetching product:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return null;
+  }
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 mt-16 max-w-7xl w-full mx-auto">
+    <div className="flex flex-col md:flex-row gap-8 mt-16 max-w-7xl w-full mx-auto px-4">
       <div className="md:w-1/2">
-        <img
-          src={product.image}
+        <OptimizedImage
+          src={product.images[0]}
           alt={product.title}
-          className="w-full rounded-lg shadow-md"
+          className="w-full rounded-lg shadow-[0px_1px_20px_8px_#00000024]"
         />
       </div>
 
@@ -42,13 +78,12 @@ function ProductDetail() {
         </div>
 
         <div className="mb-8 text-left">
-          <h2 className="text-lg font-semibold mb-2">Features</h2>
+          <h2 className="text-lg font-semibold mb-2">Details</h2>
           <ul className="list-disc pl-5">
-            {product.features.map((feature, index) => (
-              <li key={index} className="text-gray-700 mb-1">
-                {feature}
-              </li>
-            ))}
+            <li className="text-gray-700 mb-1">Brand: {product.brand}</li>
+            <li className="text-gray-700 mb-1">Category: {product.category}</li>
+            <li className="text-gray-700 mb-1">Rating: {product.rating}</li>
+            <li className="text-gray-700 mb-1">Stock: {product.stock}</li>
           </ul>
         </div>
 
