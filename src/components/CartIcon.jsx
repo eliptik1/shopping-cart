@@ -1,4 +1,7 @@
+import { useCartStore } from "./store/cartStore";
+
 function CartIcon() {
+  const { cartProducts } = useCartStore();
   return (
     <>
       <svg
@@ -16,7 +19,7 @@ function CartIcon() {
         />
       </svg>
       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-        0
+        {cartProducts.length}
       </span>
     </>
   );

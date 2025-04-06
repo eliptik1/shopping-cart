@@ -3,12 +3,15 @@ import Button from "../components/ui/Button";
 import { useState } from "react";
 import { useEffect } from "react";
 import OptimizedImage from "../components/utils/OptimizedImage";
+import { calculatePrice } from "../components/utils/calculatePrice";
+import { useCartStore } from "../components/store/cartStore";
 
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { addToCart } = useCartStore();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -22,7 +25,6 @@ function ProductDetail() {
 
         const data = await response.json();
         setProduct(data);
-        console.log(data);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching product:", err);
@@ -69,7 +71,16 @@ function ProductDetail() {
       <div className="md:w-1/2">
         <h1 className="text-3xl font-bold mb-4">{product.title}</h1>
         <p className="text-2xl font-bold text-blue-600 mb-6">
-          {product.price} TL
+          <span className="">
+            $
+            {
+              calculatePrice(product.price, product.discountPercentage)
+                .discounted
+            }
+          </span>
+          <span className="text-gray-400 text-lg line-through ml-2">
+            ${product.price}
+          </span>
         </p>
 
         <div className="mb-6 text-left">
@@ -100,7 +111,21 @@ function ProductDetail() {
             </button>
           </div>
 
-          <Button className="px-8">Add to Cart</Button>
+          <Button
+            className="px-8"
+            onClick={() => {
+              addToCart({
+                id: product.id,
+                title: product.title,
+                price: product.price,
+                image: product.thumbnail,
+                brand: product.brand,
+                quantity: 1,
+              });
+            }}
+          >
+            Add to Cart
+          </Button>
         </div>
       </div>
     </div>

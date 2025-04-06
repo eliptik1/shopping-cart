@@ -8,7 +8,7 @@ function CartItem({ title, price, image, quantity }) {
       />
       <div className="flex-1">
         <h3 className="text-lg font-medium">{title}</h3>
-        <p className="text-gray-600">{price} TL</p>
+        <p className="text-gray-600">${price}</p>
       </div>
       <div className="flex items-center">
         <button className="w-8 h-8 flex items-center justify-center border rounded-l">

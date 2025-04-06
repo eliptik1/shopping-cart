@@ -10,6 +10,7 @@ function ProductCard({
   rating,
   stock,
   brand,
+  addToCart,
 }) {
   // Determine message and color based on stock status
   const stockStatus = () => {
@@ -88,7 +89,21 @@ function ProductCard({
           </span>
         </div>
 
-        <Button className="w-full">Add to Cart</Button>
+        <Button
+          onClick={() =>
+            addToCart({
+              id,
+              title,
+              price,
+              image,
+              brand,
+              quantity: 1,
+            })
+          }
+          className="w-full"
+        >
+          Add to Cart
+        </Button>
       </div>
     </div>
   );

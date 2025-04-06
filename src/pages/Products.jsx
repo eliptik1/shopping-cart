@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import ProductCard from "../components/ui/ProductCard";
+import { calculatePrice } from "../components/utils/calculatePrice";
+import { useCartStore } from "../components/store/cartStore";
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { addToCart } = useCartStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -28,16 +31,6 @@ function Products() {
 
     fetchProducts();
   }, []);
-
-  // Function to calculate price and discounted price
-  const calculatePrice = (price, discountPercentage) => {
-    if (!discountPercentage) return price;
-    const discountedPrice = price - (price * discountPercentage) / 100;
-    return {
-      original: price,
-      discounted: discountedPrice.toFixed(2),
-    };
-  };
 
   return (
     <div className="max-w-7xl w-full mx-auto my-16 px-8">
@@ -74,6 +67,7 @@ function Products() {
                 rating={product.rating}
                 stock={product.stock}
                 brand={product.brand}
+                addToCart={addToCart}
               />
             );
           })}
