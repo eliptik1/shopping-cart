@@ -98,6 +98,7 @@ function ProductCard({
               image,
               brand,
               quantity: 1,
+              stock,
             })
           }
           className="w-full"

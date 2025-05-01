@@ -1,4 +1,7 @@
-function CartItem({ title, price, image, quantity }) {
+import { useCartStore } from "../store/cartStore";
+
+function CartItem({ title, price, image, quantity, id }) {
+  const { incrementProduct, decrementProduct, removeFromCart } = useCartStore();
   return (
     <div className="flex items-center py-4 border-b">
       <img
@@ -11,17 +14,23 @@ function CartItem({ title, price, image, quantity }) {
         <p className="text-gray-600">${price}</p>
       </div>
       <div className="flex items-center">
-        <button className="w-8 h-8 flex items-center justify-center border rounded-l">
+        <button
+          onClick={() => decrementProduct(id)}
+          className="w-8 h-8 flex items-center justify-center border rounded-l"
+        >
           -
         </button>
         <span className="w-10 h-8 flex items-center justify-center border-t border-b">
           {quantity}
         </span>
-        <button className="w-8 h-8 flex items-center justify-center border rounded-r">
+        <button
+          onClick={() => incrementProduct(id)}
+          className="w-8 h-8 flex items-center justify-center border rounded-r"
+        >
           +
         </button>
       </div>
-      <button className="ml-4 text-red-500">
+      <button onClick={() => removeFromCart(id)} className="ml-4 text-red-500">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"

@@ -12,6 +12,38 @@ export const useCartStore = create((set) => ({
         cartProducts: [...state.cartProducts, product],
       };
     }),
+  removeFromCart: (productId) => {
+    set((state) => {
+      const updatedCart = state.cartProducts.filter(
+        (item) => item.id !== productId
+      );
+      return {
+        cartProducts: [...updatedCart],
+      };
+    });
+  },
+  incrementProduct: (producId) => {
+    set((state) => {
+      const product = state.cartProducts.find((item) => item.id === producId);
+      if (product.stock > product.quantity) {
+        return { ...product, quantity: product.quantity++ };
+      } else {
+        console.log("out of stock");
+        return [];
+      }
+    });
+  },
+
+  decrementProduct: (producId) => {
+    set((state) => {
+      const product = state.cartProducts.find((item) => item.id === producId);
+      if (product.quantity > 1) {
+        return { ...product, quantity: product.quantity-- };
+      } else {
+        return [];
+      }
+    });
+  },
 
   clearCart: () => set({ cartProducts: [] }),
 }));

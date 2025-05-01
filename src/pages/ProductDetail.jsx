@@ -12,6 +12,7 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useCartStore();
+  const [quantity, setQuantitiy] = useState(1);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -100,13 +101,35 @@ function ProductDetail() {
 
         <div className="flex items-center gap-4 mb-8">
           <div className="flex items-center border rounded">
-            <button className="w-10 h-10 flex items-center justify-center">
+            <button
+              onClick={() =>
+                setQuantitiy((quantity) => {
+                  if (quantity > 1) {
+                    return --quantity;
+                  } else {
+                    return quantity;
+                  }
+                })
+              }
+              className="w-10 h-10 flex items-center justify-center"
+            >
               -
             </button>
             <span className="w-10 h-10 flex items-center justify-center">
-              1
+              {quantity}
             </span>
-            <button className="w-10 h-10 flex items-center justify-center">
+            <button
+              onClick={() =>
+                setQuantitiy((quantity) => {
+                  if (quantity < product.stock) {
+                    return ++quantity;
+                  } else {
+                    return quantity;
+                  }
+                })
+              }
+              className="w-10 h-10 flex items-center justify-center"
+            >
               +
             </button>
           </div>
@@ -120,7 +143,8 @@ function ProductDetail() {
                 price: product.price,
                 image: product.thumbnail,
                 brand: product.brand,
-                quantity: 1,
+                quantity: quantity,
+                stock: product.stock,
               });
             }}
           >
