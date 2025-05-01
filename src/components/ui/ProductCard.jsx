@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import Button from "./Button";
+import { useToast } from "./Toast";
+import { useState } from "react";
 
 function ProductCard({
   id,
@@ -22,6 +24,8 @@ function ProductCard({
   };
 
   const { message, color } = stockStatus();
+  const { notify } = useToast();
+  const [isLoading, setIsLoading] = useState();
 
   return (
     <div className="bg-white rounded-lg shadow-[0px_1px_20px_8px_#00000024] overflow-hidden hover:shadow-[0px_1px_20px_15px_#00000024] transition-shadow duration-300">
@@ -90,20 +94,32 @@ function ProductCard({
         </div>
 
         <Button
-          onClick={() =>
-            addToCart({
-              id,
-              title,
-              price,
-              image,
-              brand,
-              quantity: 1,
-              stock,
-            })
-          }
-          className="w-full"
+          disabled={isLoading}
+          onClick={() => {
+            setIsLoading(true);
+            setTimeout(() => {
+              addToCart({
+                id,
+                title,
+                price,
+                image,
+                brand,
+                quantity: 1,
+                stock,
+              });
+              notify.success("Product added to your cart!");
+              setIsLoading(false);
+            }, 400);
+          }}
+          className="w-full h-9 relative flex justify-center items-center disabled:pointer-events-none"
         >
-          Add to Cart
+          {isLoading ? (
+            <div className="absolute flex justify-center items-center">
+              <div className="animate-spin w-5 h-5 rounded-full border-2 border-gray-400 border-t-blue-600"></div>
+            </div>
+          ) : (
+            "Add to Cart"
+          )}
         </Button>
       </div>
     </div>

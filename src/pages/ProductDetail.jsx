@@ -5,14 +5,18 @@ import { useEffect } from "react";
 import OptimizedImage from "../components/utils/OptimizedImage";
 import { calculatePrice } from "../components/utils/calculatePrice";
 import { useCartStore } from "../components/store/cartStore";
+import { useToast } from "../components/ui/Toast";
 
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isButtonLoading, setIsButtonLoading] = useState();
   const [error, setError] = useState(null);
   const { addToCart } = useCartStore();
   const [quantity, setQuantitiy] = useState(1);
+
+  const { notify } = useToast();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -135,20 +139,32 @@ function ProductDetail() {
           </div>
 
           <Button
-            className="px-8"
+            className="px-8 w-64 h-9 relative flex justify-center items-center disabled:pointer-events-none"
+            disabled={isButtonLoading}
             onClick={() => {
-              addToCart({
-                id: product.id,
-                title: product.title,
-                price: product.price,
-                image: product.thumbnail,
-                brand: product.brand,
-                quantity: quantity,
-                stock: product.stock,
-              });
+              setIsButtonLoading(true);
+              setTimeout(() => {
+                addToCart({
+                  id: product.id,
+                  title: product.title,
+                  price: product.price,
+                  image: product.thumbnail,
+                  brand: product.brand,
+                  quantity: quantity,
+                  stock: product.stock,
+                });
+                notify.success("Product added to your cart!");
+                setIsButtonLoading(false);
+              }, 400);
             }}
           >
-            Add to Cart
+            {isButtonLoading ? (
+              <div className="absolute flex justify-center items-center">
+                <div className="animate-spin w-5 h-5 rounded-full border-2 border-gray-400 border-t-blue-600"></div>
+              </div>
+            ) : (
+              "Add to Cart"
+            )}
           </Button>
         </div>
       </div>
