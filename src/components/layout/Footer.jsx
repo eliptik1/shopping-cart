@@ -1,3 +1,5 @@
+import { FaGithub } from "react-icons/fa";
+
 function Footer() {
   return (
     <footer className="bg-gray-800 text-white py-6 mt-auto">
@@ -8,6 +10,15 @@ function Footer() {
               &copy; {new Date().getFullYear()} Shopping Cart App
             </p>
           </div>
+          <a
+            href="https://github.com/eliptik1"
+            className="text-sm hover:text-gray-300"
+          >
+            <div className="flex items-center gap-2">
+              <FaGithub size={18} />
+              Developed by Eliptik1
+            </div>
+          </a>
           <div className="flex space-x-4">
             <a href="#" className="text-sm hover:text-gray-300">
               About Us
