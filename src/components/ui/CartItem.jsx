@@ -1,35 +1,26 @@
+import { Link } from "react-router-dom";
 import { useCartStore } from "../store/cartStore";
+import { QuantitiyInput } from "./QuantitiyInput";
 
 function CartItem({ title, price, image, quantity, id }) {
-  const { incrementProduct, decrementProduct, removeFromCart } = useCartStore();
+  const { removeFromCart } = useCartStore();
   return (
     <div className="flex items-center py-4 border-b">
-      <img
-        src={image || "https://via.placeholder.com/80"}
-        alt={title}
-        className="w-20 h-20 object-cover rounded mr-4"
-      />
-      <div className="flex-1">
-        <h3 className="text-lg font-medium">{title}</h3>
+      <Link to={`/products/${id}`}>
+        <img
+          src={image || "https://via.placeholder.com/80"}
+          alt={title}
+          className="w-20 h-20 object-cover rounded mr-4"
+        />
+      </Link>
+      <div className="flex-1 w-full">
+        <Link to={`/products/${id}`} className="inline-block">
+          <h3 className="text-lg font-medium hover:text-blue-600 ">{title}</h3>
+        </Link>
         <p className="text-gray-600">${price}</p>
       </div>
-      <div className="flex items-center">
-        <button
-          onClick={() => decrementProduct(id)}
-          className="w-8 h-8 flex items-center justify-center border rounded-l"
-        >
-          -
-        </button>
-        <span className="w-10 h-8 flex items-center justify-center border-t border-b">
-          {quantity}
-        </span>
-        <button
-          onClick={() => incrementProduct(id)}
-          className="w-8 h-8 flex items-center justify-center border rounded-r"
-        >
-          +
-        </button>
-      </div>
+
+      <QuantitiyInput quantity={quantity} isCart={true} productId={id} />
       <button onClick={() => removeFromCart(id)} className="ml-4 text-red-500">
         <svg
           xmlns="http://www.w3.org/2000/svg"

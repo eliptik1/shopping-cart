@@ -6,6 +6,7 @@ import OptimizedImage from "../components/utils/OptimizedImage";
 import { calculatePrice } from "../components/utils/calculatePrice";
 import { useCartStore } from "../components/store/cartStore";
 import { useToast } from "../components/ui/Toast";
+import { QuantitiyInput } from "../components/ui/QuantitiyInput";
 
 function ProductDetail() {
   const { id } = useParams();
@@ -104,40 +105,11 @@ function ProductDetail() {
         </div>
 
         <div className="flex items-center gap-4 mb-8">
-          <div className="flex items-center border rounded">
-            <button
-              onClick={() =>
-                setQuantitiy((quantity) => {
-                  if (quantity > 1) {
-                    return --quantity;
-                  } else {
-                    return quantity;
-                  }
-                })
-              }
-              className="w-10 h-10 flex items-center justify-center"
-            >
-              -
-            </button>
-            <span className="w-10 h-10 flex items-center justify-center">
-              {quantity}
-            </span>
-            <button
-              onClick={() =>
-                setQuantitiy((quantity) => {
-                  if (quantity < product.stock) {
-                    return ++quantity;
-                  } else {
-                    return quantity;
-                  }
-                })
-              }
-              className="w-10 h-10 flex items-center justify-center"
-            >
-              +
-            </button>
-          </div>
-
+          <QuantitiyInput
+            product={product}
+            quantity={quantity}
+            setQuantitiy={setQuantitiy}
+          />
           <Button
             className="px-8 w-64 h-9 relative flex justify-center items-center disabled:pointer-events-none"
             disabled={isButtonLoading}
@@ -159,6 +131,7 @@ function ProductDetail() {
                   stock: product.stock,
                 });
                 notify.success("Product added to your cart!");
+                setQuantitiy(1);
                 setIsButtonLoading(false);
               }, 400);
             }}
