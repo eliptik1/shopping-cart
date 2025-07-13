@@ -13,7 +13,7 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [isButtonLoading, setIsButtonLoading] = useState();
   const [error, setError] = useState(null);
-  const { addToCart } = useCartStore();
+  const { addToCart, isProductExists } = useCartStore();
   const [quantity, setQuantitiy] = useState(1);
 
   const { notify } = useToast();
@@ -144,6 +144,11 @@ function ProductDetail() {
             onClick={() => {
               setIsButtonLoading(true);
               setTimeout(() => {
+                if (isProductExists(product.id) == true) {
+                  notify.warn("Product is already in your cart.");
+                  setIsButtonLoading(false);
+                  return;
+                }
                 addToCart({
                   id: product.id,
                   title: product.title,

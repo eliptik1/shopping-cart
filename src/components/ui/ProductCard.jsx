@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Button from "./Button";
 import { useToast } from "./Toast";
 import { useState } from "react";
+import { useCartStore } from "../store/cartStore";
 
 function ProductCard({
   id,
@@ -23,6 +24,7 @@ function ProductCard({
     return { message: "In Stock", color: "bg-green-100 text-green-800" };
   };
 
+  const { isProductExists } = useCartStore();
   const { message, color } = stockStatus();
   const { notify } = useToast();
   const [isLoading, setIsLoading] = useState();
@@ -98,6 +100,11 @@ function ProductCard({
           onClick={() => {
             setIsLoading(true);
             setTimeout(() => {
+              if (isProductExists(id) == true) {
+                notify.warn("Product is already in your cart.");
+                setIsLoading(false);
+                return;
+              }
               addToCart({
                 id,
                 title,
